@@ -1,5 +1,6 @@
 ### CUSTOM ###
 .env
+data/ # ignore mounted volume data etc/
 
 ### DEFAULT PYTON ###
 
