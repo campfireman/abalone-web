@@ -13,7 +13,6 @@ def test_created_user_valid():
     }
     response = client.post("/user", json=test_user)
     body = response.json()
-    print(body)
     assert response.status_code == status.HTTP_201_CREATED
-    assert body['username'] <= test_user['username']
-    assert body['email'] <= test_user['email']
+    assert body['username'] == test_user['username']
+    assert body['email'] == test_user['email']

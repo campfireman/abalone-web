@@ -2,7 +2,7 @@ from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from mongoengine import connect
 
-from . import models, schemas, settings
+from . import models, schemas, settings, utils
 
 connect(
     db=settings.DB_NAME,
@@ -24,11 +24,9 @@ app.add_middleware(
 )
 
 
-@app.post("/user")
-async def user_create(new_user: schemas.NewUser, status_code=status.HTTP_201_CREATED):
-    print(new_user.dict())
+@app.post("/user", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
+async def user_create(new_user: schemas.NewUser):
     saved_user = models.User(
         **new_user.dict()
     ).save()
-    print('saved_user')
-    return saved_user
+    return utils.model_schema_intersection(saved_user, schemas.User)
