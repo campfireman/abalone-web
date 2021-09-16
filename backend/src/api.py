@@ -5,11 +5,12 @@ from mongoengine import connect
 from . import models, schemas, settings
 
 connect(
-    # db=settings.DB_NAME,
-    # host=settings.DB_HOST,
-    # username=settings.DB_PASSWORD,
-    # password=settings.DB_USERNAME
-    host='mongodb://root:pw@mongo:27017/dev'
+    db=settings.DB_NAME,
+    host=settings.DB_HOST,
+    port=settings.DB_PORT,
+    username=settings.DB_USERNAME,
+    password=settings.DB_PASSWORD,
+    authentication_source='admin',
 )
 
 app = FastAPI()

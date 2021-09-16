@@ -11,6 +11,7 @@ DB_NAME = get_env('DB_NAME')
 DB_USERNAME = get_env('DB_USERNAME')
 DB_PASSWORD = get_env('DB_PASSWORD')
 DB_HOST = get_env('DB_HOST')
+DB_PORT = get_env('DB_PORT', type_cast=int)
 
 # misc
 USERNAME_MAX_LENGTH = get_env('USERNAME_MAX_LENGTH', 20)
