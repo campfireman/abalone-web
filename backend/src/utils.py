@@ -5,13 +5,15 @@ class EnvironmentError(Exception):
     pass
 
 
-def get_env(key, default=None) -> str:
+def get_env(key: str, default: str = None, type_cast: callable = None) -> str:
+    value = None
     try:
-        return os.environ[key]
+        value = os.environ[key]
     except KeyError:
         if default:
-            return default
+            value = default
         else:
             raise EnvironmentError(
                 f'The value for {key} has not been set and no default is present.'
             )
+    return type_cast(value) if type_cast else value
