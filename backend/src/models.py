@@ -18,7 +18,6 @@ class UuidField(mge.StringField):
 
 
 class User(mge.Document):
-    identifier = UuidField()
     username = mge.StringField(
         min_length=settings.USERNAME_MIN_LENGTH,
         max_length=settings.USERNAME_MAX_LENGTH,
