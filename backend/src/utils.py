@@ -7,8 +7,11 @@ class EnvironmentError(Exception):
 
 def get_env(key, default=None) -> str:
     try:
-        return os.environ.get(key, default)
+        return os.environ[key]
     except KeyError:
-        raise EnvironmentError(
-            f'The value for {key} has not been set and no default is present.'
-        )
+        if default:
+            return default
+        else:
+            raise EnvironmentError(
+                f'The value for {key} has not been set and no default is present.'
+            )
