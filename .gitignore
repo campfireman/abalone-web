@@ -1,7 +1,11 @@
 ### CUSTOM ###
 .env
-# ignore mounted volume data etc
+
+# Mounted volume data etc
 data/
+
+# Personal vscode settings
+.vscode
 
 ### DEFAULT PYTON ###
 
