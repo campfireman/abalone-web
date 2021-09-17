@@ -1,12 +1,11 @@
-from datetime import datetime, timedelta
-from typing import Optional
+from datetime import timedelta
 
 from fastapi import FastAPI, status
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jose import JWTError, jwt
-from mongoengine import DoesNotExist, connect
+from jose import JWTError
+from mongoengine import connect
 
 from . import auth, models
 from . import operations as op
