@@ -1,4 +1,6 @@
-
+'''
+Based on https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/
+'''
 
 from datetime import datetime, timedelta
 from typing import Optional
