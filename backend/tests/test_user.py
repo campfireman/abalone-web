@@ -1,7 +1,7 @@
 from fastapi import status
 from fastapi.testclient import TestClient
 from mongoengine import connect, disconnect
-from src import models
+from src import auth, models
 from src import operations as op
 from src import schemas, settings
 from src.api import app
@@ -32,6 +32,18 @@ def test_created_user_valid():
     assert body['username'] == TEST_USER.username
     assert body['email'] == TEST_USER.email
     # delete user created during request
+    op.user_delete(TEST_USER.username)
+
+
+def test_user_read():
+    # create logged in user
+    op.user_create(TEST_USER)
+    token = auth.create_access_token({'sub': TEST_USER.username})
+    response = client.get("/user", headers={
+        'Authorization': f'Bearer {token}',
+    })
+    body = response.json()
+    assert response.status_code == status.HTTP_200_OK
     op.user_delete(TEST_USER.username)
 
 

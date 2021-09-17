@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from fastapi import FastAPI, status
+from fastapi import Depends, FastAPI, status
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -35,6 +35,11 @@ app.add_middleware(
 async def user_create(new_user: schemas.NewUser):
     saved_user = op.user_create(new_user)
     return utils.model_schema_intersection(saved_user, schemas.User)
+
+
+@app.get("/user", response_model=schemas.User)
+async def user_read(current_user: models.User = Depends(auth.get_current_active_user)):
+    return utils.model_schema_intersection(current_user, schemas.User)
 
 
 @app.post('/user/login')
