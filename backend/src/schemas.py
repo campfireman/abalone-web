@@ -12,3 +12,8 @@ class User(BaseModel):
     username: str
     email: str
     created_at: str
+
+
+class UserCredentials(BaseModel):
+    username: str
+    password: str
