@@ -1,4 +1,4 @@
-abalone-engine @ git+http://github.com/campfireman/abalone-engine.git@0b391823e636a1c482f7ecb49ca3efc9e4e43bf2
+abalone-engine @ git+http://github.com/campfireman/abalone-engine.git
 asgiref==3.4.1
 attrs==21.2.0
 autopep8==1.5.7
