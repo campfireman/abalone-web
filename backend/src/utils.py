@@ -1,5 +1,7 @@
 import os
 
+from abalone_engine.game import Game
+from fastapi import Websocket
 from mongoengine import Document
 from pydantic import BaseModel
 
@@ -28,3 +30,22 @@ def model_schema_intersection(model: Document, schema: BaseModel) -> dict:
         value = getattr(model, key)
         intersection[key] = str(value) if key == 'pk' else value
     return intersection
+
+
+class GameManager:
+    def __init__(self):
+        self._games: dict = {}
+
+    def init_game(game_id: str) -> None:
+        if game_id in self._games:
+            return
+        else:
+            self._games[game_id] = {
+                'game': Game(),
+                'black': None,
+                'white': None,
+            }
+
+    def connect(_type_: str, game_id: str, websocket: Websocket) -> None:
+        self.init_game(game_id)
+        self._games[game_id][_type] = websocket
