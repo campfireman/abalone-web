@@ -37,7 +37,7 @@ class GameManager:
     def __init__(self):
         self._games: dict = {}
 
-    def init_game(game_id: str) -> None:
+    def init_game(self, game_id: str) -> None:
         if game_id in self._games:
             return
         else:
@@ -47,6 +47,6 @@ class GameManager:
                 'white': None,
             }
 
-    def connect(_type_: str, game_id: str, websocket: WebSocket) -> None:
+    def connect(self, _type: str, game_id: str, websocket: WebSocket) -> None:
         self.init_game(game_id)
         self._games[game_id][_type] = websocket
