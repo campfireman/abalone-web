@@ -32,18 +32,6 @@ app.add_middleware(
 )
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(
-        to_encode, settings.SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
-    return encoded_jwt
-
-
 @app.post("/user", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
 async def user_create(new_user: schemas.NewUser):
     saved_user = op.user_create(new_user)
@@ -60,7 +48,7 @@ async def user_login(credentials: schemas.UserCredentials):
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRATION)
-    access_token = create_access_token(
+    access_token = auth.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
