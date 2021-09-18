@@ -26,6 +26,9 @@ class User(mge.Document):
     email = mge.EmailField()
     created_at = mge.DateTimeField(default=datetime.utcnow)
 
+    def __str__(self):
+        return self.username
+
 
 class Move(mge.EmbeddedDocument):
     ply = mge.IntField()

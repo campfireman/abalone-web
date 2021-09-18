@@ -1,7 +1,7 @@
 from fastapi import status
 from fastapi.testclient import TestClient
 from mongoengine import connect, disconnect
-from src import auth, models
+from src import auth, enums, forms, models
 from src import operations as op
 from src import schemas, settings
 from src.api import app
@@ -21,6 +21,11 @@ connect(
 TEST_USER = schemas.NewUser(
     username='peterpopper',
     email='peter@popper.com',
+    password='password',
+)
+TEST_USER2 = schemas.NewUser(
+    username='peterpopper2',
+    email='peter@popper2.com',
     password='password',
 )
 
@@ -56,3 +61,19 @@ def test_user_login():
     response = client.post("/user/login", json=credentials.dict())
     assert response.status_code == status.HTTP_200_OK
     new_user.delete()
+
+
+def test_game_create():
+    user_new1 = op.user_create(TEST_USER)
+    user_new2 = op.user_create(TEST_USER2)
+
+    game_form = forms.GameForm(
+        black=user_new1.username,
+        white=user_new2.username,
+        starting_formation=enums.Formation.GERMAN_DAISY.value,
+    )
+    response = client.post("/game", json=game_form.dict())
+    body = response.json()
+    assert response.status_code == status.HTTP_201_CREATED
+    user_new1.delete()
+    user_new2.delete()

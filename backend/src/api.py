@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError
 from mongoengine import connect
 
-from . import auth, models
+from . import auth, forms, models
 from . import operations as op
 from . import schemas, settings, utils
 
@@ -56,3 +56,17 @@ async def user_login(credentials: schemas.UserCredentials):
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@app.post('/game', status_code=status.HTTP_201_CREATED)
+async def game_create(game_form: forms.GameForm):
+    if game_form.is_valid:
+        game_new = game_form.save()
+        return utils.model_schema_intersection(game_new, schemas.Game)
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail={
+            'text': 'Validation error',
+            'errors': game_form.errors,
+        }
+    )

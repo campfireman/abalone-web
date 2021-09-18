@@ -2,6 +2,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from . import models
+
 
 class NewUser(BaseModel):
     username: str
@@ -28,3 +30,11 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: Optional[str] = None
+
+
+class Game(BaseModel):
+    pk: str
+    black: str
+    white: str
+    starting_formation: int
+    created_at: str

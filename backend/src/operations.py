@@ -1,3 +1,5 @@
+from mongoengine import DoesNotExist
+
 from . import auth, models, schemas
 
 
