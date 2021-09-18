@@ -11,6 +11,11 @@ class ValidationError(Exception):
 
 
 class BaseForm(BaseModel):
+    '''
+    Form class inspired by Django forms
+    Inherits from pydantic BaseModel so that the form can be used to validate incoming endpint data
+    '''
+
     class Meta:
         model = None
 
