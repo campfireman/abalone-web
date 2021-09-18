@@ -18,12 +18,12 @@ connect(
     authentication_source='admin',
 )
 
-TEST_USER = schemas.NewUser(
+TEST_USER = forms.UserForm(
     username='peterpopper',
     email='peter@popper.com',
     password='password',
 )
-TEST_USER2 = schemas.NewUser(
+TEST_USER2 = forms.UserForm(
     username='peterpopper2',
     email='peter@popper2.com',
     password='password',
@@ -42,7 +42,7 @@ def test_created_user_valid():
 
 def test_user_read():
     # create logged in user
-    op.user_create(TEST_USER)
+    TEST_USER.quick_save()
     token = auth.create_access_token({'sub': TEST_USER.username})
     response = client.get("/user", headers={
         'Authorization': f'Bearer {token}',
@@ -57,15 +57,15 @@ def test_user_login():
         username=TEST_USER.username,
         password=TEST_USER.password,
     )
-    new_user = op.user_create(TEST_USER)
+    new_user = TEST_USER.quick_save()
     response = client.post("/user/login", json=credentials.dict())
     assert response.status_code == status.HTTP_200_OK
     new_user.delete()
 
 
 def test_game_create():
-    user_new1 = op.user_create(TEST_USER)
-    user_new2 = op.user_create(TEST_USER2)
+    user_new1 = TEST_USER.quick_save()
+    user_new2 = TEST_USER2.quick_save()
 
     game_form = forms.GameForm(
         black=user_new1.username,

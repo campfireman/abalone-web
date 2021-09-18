@@ -5,12 +5,6 @@ from pydantic import BaseModel
 from . import models
 
 
-class NewUser(BaseModel):
-    username: str
-    email: str
-    password: str
-
-
 class User(BaseModel):
     pk: str
     username: str

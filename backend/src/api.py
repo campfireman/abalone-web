@@ -32,9 +32,17 @@ app.add_middleware(
 
 
 @app.post("/user", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
-async def user_create(new_user: schemas.NewUser):
-    saved_user = op.user_create(new_user)
-    return utils.model_schema_intersection(saved_user, schemas.User)
+async def user_create(user_form: forms.UserForm):
+    if user_form.is_valid:
+        user_new = user_form.save()
+        return utils.model_schema_intersection(user_new, schemas.User)
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail={
+            'text': 'Validation error',
+            'errors': user_form.errors,
+        }
+    )
 
 
 @app.get("/user", response_model=schemas.User)

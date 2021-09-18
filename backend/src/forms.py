@@ -1,9 +1,9 @@
 from collections import defaultdict
 
 from mongoengine import DoesNotExist
-from pydantic import BaseModel, Extra
+from pydantic import BaseModel, Extra, PrivateAttr
 
-from . import models
+from . import auth, models
 
 
 class ValidationError(Exception):
@@ -17,8 +17,13 @@ class BaseForm(BaseModel):
     class Config:
         extra = Extra.allow
 
-    _form_data: dict = {}
-    _errors: defaultdict = defaultdict(list)
+    _form_data: dict = PrivateAttr()
+    _errors: defaultdict = PrivateAttr()
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        self._form_data = {}
+        self._errors = defaultdict(list)
 
     def process(self):
         self._form_data = self.dict()
@@ -49,6 +54,36 @@ class BaseForm(BaseModel):
         if commit:
             new_model.save()
         return new_model
+
+    def quick_save(self):
+        self.process()
+        return self.save()
+
+
+class UserForm(BaseForm):
+    username: str
+    email: str
+    password: str
+
+    def clean_username(self):
+        try:
+            models.User.objects.get(username=self._form_data['username'])
+        except DoesNotExist:
+            return
+        raise ValidationError('Username already taken')
+
+    def clean_email(self):
+        try:
+            models.User.objects.get(email=self._form_data['email'])
+        except DoesNotExist:
+            return
+        raise ValidationError('E-mail already taken')
+
+    def clean_password(self):
+        self._form_data['password'] = auth.hash_password(self.password)
+
+    class Meta:
+        model = models.User
 
 
 class GameForm(BaseForm):
